@@ -32,19 +32,6 @@ public class Task1Tests {
         User user2 = getUserByName("Antonette");
         System.out.println("user.toString() = " + user2.toString());
         System.out.println("*********************************");
-
-//  To-do
-//        Type type = new TypeToken<ArrayList<UserTODO>>(){}.getType();
-//        List<UserTODO> todos = gson.fromJson(json, type);
-//        List<UserTODO> todos = JsonHelper.jsonToListObjects(json, UserTODO.class);
-//        System.out.println("todos.size() = " + todos.size());
-//        for (UserTODO todo: todos) {
-//            System.out.println("todo.getUserId() = " + todo.getUserId());
-//            System.out.println("todo.getId() = " + todo.getId());
-//            System.out.println("todo.getTitle() = " + todo.getTitle());
-//            System.out.println("todo.isCompleted() = " + todo.isCompleted());
-//        }
-
     }
 
     private static String createUser() {

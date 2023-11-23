@@ -11,7 +11,7 @@ public class Task2Tests {
     private final static String URL_POST_COMMENTS = "https://jsonplaceholder.typicode.com/posts/%d/comments";
 
     public static void main(String[] args) {
-        int userId = 2;
+        int userId = 1;
         String postsJson = getPostsByUserId(userId);
         List<Post> posts = JsonHelper.jsonToListObjects(postsJson, Post.class);
         int postId = posts.get(posts.size()-1).getId();
@@ -30,16 +30,20 @@ public class Task2Tests {
         }
     }
 
+    private static ClientAPI getClientAPI() {
+        return new ClientJSoup();
+    }
+
     private static String getPostsByUserId(int userId) {
 
-        ClientAPI clientAPI = new ClientJSoup();
+        ClientAPI clientAPI = getClientAPI();
         Map<String,String> apiResult = clientAPI.get(String.format(URL_USER_POSTS, userId), null, null);
 
         return apiResult.get("respBody");
     }
 
     private static String getCommentsByPostId(int postId) {
-        ClientAPI clientAPI = new ClientJSoup();
+        ClientAPI clientAPI = getClientAPI();
         Map<String,String> apiResult = clientAPI.get(String.format(URL_POST_COMMENTS, postId), null, null);
 
         return apiResult.get("respBody");

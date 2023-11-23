@@ -37,6 +37,11 @@ public class User {
     private Address address;
     private Company company;
 
+    public User() {
+        this.address = new Address();
+        this.company = new Company();
+    }
+
     public User(int id, String name, String username, String email, String phone, String website) {
         this.id = id;
         this.name = name;
@@ -44,14 +49,18 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.website = website;
+        this.address = new Address();
+        this.company = new Company();
     }
 
-    public void setAddress(Address address) {
+    public User setAddress(Address address) {
         this.address = address;
+        return this;
     }
 
-    public void setCompany(Company company) {
+    public User setCompany(Company company) {
         this.company = company;
+        return this;
     }
 
     public int getId() {
@@ -138,29 +147,33 @@ public class User {
         return Objects.hash(id, name, username, email);
     }
 
-}
 
-    class Address {
+    static class Address {
         private String street;
         private String suite;
         private String city;
         private String zipcode;
         public Geo geo;
 
+        public Address() {
+            this.geo = new Geo();
+        }
 
         public Address(String street, String suite, String city, String zipcode) {
             this.street = street;
             this.suite = suite;
             this.city = city;
             this.zipcode = zipcode;
+            this.geo = new Geo();
         }
 
         public void setGeo(Geo geo) {
             this.geo = geo;
+//            return this();
         }
 
         public String getStreet() {
-        return street;
+            return street;
         }
 
         public String getSuite() {
@@ -175,9 +188,9 @@ public class User {
             return zipcode;
         }
 
-         public Geo getGeo() {
-             return geo;
-         }
+        public Geo getGeo() {
+            return geo;
+        }
 
         public void setStreet(String street) {
             this.street = street;
@@ -196,54 +209,62 @@ public class User {
         }
 
         @Override
-     public String toString() {
-         return "{" +
-                 "street='" + street + '\'' +
-                 ", suite='" + suite + '\'' +
-                 ", city='" + city + '\'' +
-                 ", zipcode='" + zipcode + '\'' +
-                 '}';
-     }
-    }
-
-    class Geo {
-        private String lat;
-        private String lng;
-
-        public Geo(String lat, String lng) {
-            this.lat = lat;
-            this.lng = lng;
-        }
-
-        public String getLat() {
-            return lat;
-        }
-
-        public String getLng() {
-            return lng;
-        }
-
-        public void setLat(String lat) {
-            this.lat = lat;
-        }
-
-        public void setLng(String lng) {
-            this.lng = lng;
-        }
-
-        @Override
         public String toString() {
-         return "{" +
-                 "lat=" + lat +
-                 ", lng=" + lng +
-                 '}';
+            return "{" +
+                    "street='" + street + '\'' +
+                    ", suite='" + suite + '\'' +
+                    ", city='" + city + '\'' +
+                    ", zipcode='" + zipcode + '\'' +
+                    '}';
+        }
+
+        static class Geo {
+            private String lat;
+            private String lng;
+
+            public Geo() {
+            }
+
+            public Geo(String lat, String lng) {
+                this.lat = lat;
+                this.lng = lng;
+            }
+
+            public String getLat() {
+                return lat;
+            }
+
+            public String getLng() {
+                return lng;
+            }
+
+            public void setLat(String lat) {
+                this.lat = lat;
+            }
+
+            public void setLng(String lng) {
+                this.lng = lng;
+            }
+
+            @Override
+            public String toString() {
+                return "{" +
+                        "lat=" + lat +
+                        ", lng=" + lng +
+                        '}';
+            }
         }
     }
 
-    class Company {
+
+
+    static class Company {
         private String name;
         private String catchPhrase;
         private String bs;
+
+        public Company() {
+        }
 
         public Company(String name, String catchPhrase, String bs) {
             this.name = name;
@@ -284,3 +305,8 @@ public class User {
                     '}';
         }
     }
+}
+
+
+
+

@@ -10,12 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 //https://reflectoring.io/comparison-of-java-http-clients/
-
-public class ClientApacheFluent implements ClientAPI{
+public class ClientHttpClientJava implements ClientAPI{
 
     private final Map<String,String> props;
 
-    public ClientApacheFluent(Map<String, String> props) {
+    public ClientHttpClientJava(Map<String, String> props) {
         this.props = props;
     }
 
@@ -93,9 +92,9 @@ public class ClientApacheFluent implements ClientAPI{
             System.out.println("Error during GET request: " + e.getMessage());
         }
 
-        if (respCode < 200 || respCode > 299){
-            retResp.put("respBody", "{}");
-        }
+            if (respCode < 200 || respCode > 299){
+                retResp.put("respBody", "{}");
+            }
 
         return retResp;
     }

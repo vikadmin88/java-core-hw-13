@@ -3,6 +3,7 @@ package m13.api;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,8 @@ public class Task2Tests {
 
         String commentsJson = getCommentsByPostId(postId);
 
-        String fileTo = "user-"+userId+"-post-"+postId+"-comments.json";
-        saveCommentsToFile(fileTo, commentsJson);
+        String fileToSave = "user-"+userId+"-post-"+postId+"-comments.json";
+        saveCommentsToFile(fileToSave, commentsJson);
 
         List<Comment> comments = JsonHelper.jsonToListObjects(commentsJson, Comment.class);
         for(Comment comment : comments) {
@@ -31,22 +32,33 @@ public class Task2Tests {
     }
 
     private static ClientAPI getClientAPI() {
-        return new ClientJSoup();
+        Map<String,String> props = new HashMap<>();
+        props.put("Timeout", "60000");
+        props.put("Content-Type", "application/json");
+        props.put("Accept", "*/*");
+        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
+
+        ClientAPI clientAPI = new ClientHttpClientJava(props);
+//        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
+//        ClientAPI clientAPI = new ClientJSoup(props);
+
+        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
+        return clientAPI;
     }
 
     private static String getPostsByUserId(int userId) {
 
         ClientAPI clientAPI = getClientAPI();
-        Map<String,String> apiResult = clientAPI.get(String.format(URL_USER_POSTS, userId), null, null);
+        Map<String,String> reqResult = clientAPI.get(String.format(URL_USER_POSTS, userId), null, null);
 
-        return apiResult.get("respBody");
+        return reqResult.get("respBody");
     }
 
     private static String getCommentsByPostId(int postId) {
         ClientAPI clientAPI = getClientAPI();
-        Map<String,String> apiResult = clientAPI.get(String.format(URL_POST_COMMENTS, postId), null, null);
+        Map<String,String> reqResult = clientAPI.get(String.format(URL_POST_COMMENTS, postId), null, null);
 
-        return apiResult.get("respBody");
+        return reqResult.get("respBody");
     }
 
     private static void saveCommentsToFile(String fileName, String content) {

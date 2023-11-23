@@ -34,12 +34,10 @@ public class User {
     private String email;
     private String phone;
     private String website;
-    private Address address;
-    private Company company;
+    private Address address = new Address();
+    private Company company = new Company();
 
     public User() {
-        this.address = new Address();
-        this.company = new Company();
     }
 
     public User(int id, String name, String username, String email, String phone, String website) {
@@ -49,16 +47,18 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.website = website;
-        this.address = new Address();
-        this.company = new Company();
     }
 
-    public User setAddress(Address address) {
+    public User setAddress(User.Address address) {
         this.address = address;
         return this;
     }
+    public User setAddressGeo(User.Address.Geo geo) {
+        this.address.geo = geo;
+        return this;
+    }
 
-    public User setCompany(Company company) {
+    public User setCompany(User.Company company) {
         this.company = company;
         return this;
     }
@@ -153,10 +153,9 @@ public class User {
         private String suite;
         private String city;
         private String zipcode;
-        public Geo geo;
+        public Geo geo = new Geo();
 
         public Address() {
-            this.geo = new Geo();
         }
 
         public Address(String street, String suite, String city, String zipcode) {
@@ -164,12 +163,10 @@ public class User {
             this.suite = suite;
             this.city = city;
             this.zipcode = zipcode;
-            this.geo = new Geo();
         }
 
         public void setGeo(Geo geo) {
             this.geo = geo;
-//            return this();
         }
 
         public String getStreet() {

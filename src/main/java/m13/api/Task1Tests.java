@@ -1,7 +1,9 @@
 package m13.api;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Task1Tests {
     private final static String URL_USERS = "https://jsonplaceholder.typicode.com/users";
@@ -18,31 +20,43 @@ public class Task1Tests {
         System.out.println("*********************************");
 
         int delRespCode = deleteUser(1);
-        System.out.println("delRespCode = " + delRespCode);
+        System.out.println("deleteUser() = " + delRespCode);
         System.out.println("*********************************");
 
         getUsers();
         System.out.println("*********************************");
 
         User user = getUserById(1);
-        System.out.println("user.toString() = " + user.toString());
+        System.out.println("getUserById() = " + user.toString());
         System.out.println("*********************************");
 
-        User user2 = getUserByName("Antonette");
-        System.out.println("user.toString() = " + user2.toString());
+        User user2 = getUserByName("Antonette").orElse(new User());
+        System.out.println("getUserByName() = " + user2.toString());
         System.out.println("*********************************");
     }
 
     private static ClientAPI getClientAPI() {
-        return new ClientJSoup();
+        Map<String,String> props = new HashMap<>();
+        props.put("Timeout", "60000");
+        props.put("Content-Type", "application/json");
+        props.put("Accept", "*/*");
+        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
+
+        ClientAPI clientAPI = new ClientHttpClientJava(props);
+//        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
+//        ClientAPI clientAPI = new ClientJSoup(props);
+
+        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
+        return clientAPI;
     }
     private static String createUser() {
         System.out.println("\nCreate newUser object of User:");
 
         User newUser = new User(22, "My Name", "my_username", "my@email.eml", "33558800", "epowhost.com")
             .setCompany(new User.Company("My Company", "Bla Bla", "What is bs?"))
-            .setAddress(new User.Address("My Street", "My Suit", "My City", "My ZipCode"));
-        newUser.getAddress().setGeo(new User.Address.Geo("23.345", "65.234"));
+            .setAddress(new User.Address("My Street", "My Suit", "My City", "My ZipCode"))
+            .setAddressGeo(new User.Address.Geo("23.345", "65.234"));
+
         System.out.println("newUser.toString() = " + newUser);
 
         System.out.println("\nSerialize newUser to json:");
@@ -65,8 +79,8 @@ public class Task1Tests {
 
         User newUser = new User(userId, "My Name", "my_username", "my@email.eml", "33558800", "epowhost.com")
             .setCompany(new User.Company("My Company", "Bla Bla", "What is bs?"))
-            .setAddress(new User.Address("My Street", "My Suit", "My City", "My ZipCode"));
-        newUser.getAddress().setGeo(new User.Address.Geo("23.345", "65.234"));
+            .setAddress(new User.Address("My Street", "My Suit", "My City", "My ZipCode"))
+            .setAddressGeo(new User.Address.Geo("23.345", "65.234"));
 
         String jsonNewUser = JsonHelper.objToJson(newUser);
         System.out.println("jsonNewUser = " + jsonNewUser);
@@ -131,7 +145,7 @@ public class Task1Tests {
         return JsonHelper.jsonToObj(respBody, User.class);
     }
 
-    private static User getUserByName(String userName) {
+    private static Optional<User> getUserByName(String userName) {
 
         System.out.printf("\nGet User with username = %s:\n", userName);
 
@@ -145,7 +159,7 @@ public class Task1Tests {
         System.out.println("respBody = " + respBody);
 
         System.out.println("\nDeserialize User from json:");
-
-        return JsonHelper.jsonToListObjects(respBody, User.class).get(0);
+        List<User> listUsers = JsonHelper.jsonToListObjects(respBody, User.class);
+        return !listUsers.isEmpty() ? Optional.of(listUsers.get(0)) : Optional.empty();
     }
 }

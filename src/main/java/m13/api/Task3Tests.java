@@ -7,6 +7,21 @@ import java.util.Map;
 public class Task3Tests {
     private final static String URL_USER_TODOS = "https://jsonplaceholder.typicode.com/users/%d/todos";
 
+    private static ClientAPI getClientAPI() {
+        Map<String,String> props = new HashMap<>();
+        props.put("Timeout", "60000");
+        props.put("Content-Type", "application/json");
+        props.put("Accept", "*/*");
+        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
+
+        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
+//        ClientAPI clientAPI = new ClientHttpClientJava(props);
+//        ClientAPI clientAPI = new ClientJSoup(props);
+
+        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
+        return clientAPI;
+    }
+
     public static void main(String[] args) {
         int userId = 1;
 
@@ -20,20 +35,6 @@ public class Task3Tests {
         System.out.println("todos.size() = " + todos.size());
     }
 
-    private static ClientAPI getClientAPI() {
-        Map<String,String> props = new HashMap<>();
-        props.put("Timeout", "60000");
-        props.put("Content-Type", "application/json");
-        props.put("Accept", "*/*");
-        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
-
-        ClientAPI clientAPI = new ClientHttpClientJava(props);
-//        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
-//        ClientAPI clientAPI = new ClientJSoup(props);
-
-        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
-        return clientAPI;
-    }
     private static String getToDoListByUserId(int userId, Map<String,String> params) {
 
         ClientAPI clientAPI = getClientAPI();

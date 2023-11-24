@@ -14,7 +14,7 @@ public class ClientHttpURLConnectionsJava implements ClientAPI {
     }
 
     private HttpURLConnection connect(String reqUrl, Map<String, String> params) throws IOException {
-        if (params != null && !params.isEmpty()) {
+        if (params != null) {
             reqUrl = reqUrl.contains("?") ? reqUrl + "&" : reqUrl + "?";
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 String key = entry.getKey();
@@ -43,17 +43,18 @@ public class ClientHttpURLConnectionsJava implements ClientAPI {
             HttpURLConnection conn = connect(reqUrl, params);
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
+
             OutputStream out = conn.getOutputStream();
             out.write(reqBody.getBytes());
             out.flush();
+
             int respCode = conn.getResponseCode();
             retResp.put("respCode", String.valueOf(respCode));
 
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", getRespStr(conn));
-            } else {
-                retResp.put("respBody", "{}");
             }
+            conn.disconnect();
 
         } catch (IOException e) {
             retResp.put("respErr", e.getMessage());
@@ -70,13 +71,12 @@ public class ClientHttpURLConnectionsJava implements ClientAPI {
         try {
             HttpURLConnection conn = connect(reqUrl, params);
             conn.setRequestMethod("GET");
-            int respCode = conn.getResponseCode();
 
+            int respCode = conn.getResponseCode();
             retResp.put("respCode", String.valueOf(respCode));
+
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", getRespStr(conn));
-            } else {
-                retResp.put("respBody", "{}");
             }
             conn.disconnect();
 
@@ -95,17 +95,18 @@ public class ClientHttpURLConnectionsJava implements ClientAPI {
             HttpURLConnection conn = connect(reqUrl, params);
             conn.setRequestMethod("PUT");
             conn.setDoOutput(true);
+
             OutputStream out = conn.getOutputStream();
             out.write(reqBody.getBytes());
             out.flush();
+
             int respCode = conn.getResponseCode();
             retResp.put("respCode", String.valueOf(respCode));
 
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", getRespStr(conn));
-            } else {
-                retResp.put("respBody", "{}");
             }
+            conn.disconnect();
 
         } catch (IOException e) {
             retResp.put("respErr", e.getMessage());
@@ -129,9 +130,8 @@ public class ClientHttpURLConnectionsJava implements ClientAPI {
 
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", getRespStr(conn));
-            } else {
-                retResp.put("respBody", "{}");
             }
+            conn.disconnect();
 
         } catch (IOException e) {
             retResp.put("respErr", e.getMessage());

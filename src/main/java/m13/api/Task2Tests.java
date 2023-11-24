@@ -11,15 +11,35 @@ public class Task2Tests {
     private final static String URL_USER_POSTS = "https://jsonplaceholder.typicode.com/users/%d/posts";
     private final static String URL_POST_COMMENTS = "https://jsonplaceholder.typicode.com/posts/%d/comments";
 
+    private static ClientAPI getClientAPI() {
+        Map<String,String> props = new HashMap<>();
+        props.put("Timeout", "60000");
+        props.put("Content-Type", "application/json");
+        props.put("Accept", "*/*");
+        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
+
+        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
+//        ClientAPI clientAPI = new ClientHttpClientJava(props);
+//        ClientAPI clientAPI = new ClientJSoup(props);
+
+        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
+        return clientAPI;
+    }
+
     public static void main(String[] args) {
         int userId = 1;
         String postsJson = getPostsByUserId(userId);
         List<Post> posts = JsonHelper.jsonToListObjects(postsJson, Post.class);
+        if (posts == null || posts.isEmpty()) {
+            System.out.println("User with id " + userId + " not found.");
+            System.exit(0);
+        }
         int postId = posts.get(posts.size()-1).getId();
 
         String commentsJson = getCommentsByPostId(postId);
 
-        String fileToSave = "user-"+userId+"-post-"+postId+"-comments.json";
+        String fileToSave = String.format("user-%d-post-%d-comments.json", userId, postId);
+        System.out.println("Write comments to file = " + fileToSave);
         saveCommentsToFile(fileToSave, commentsJson);
 
         List<Comment> comments = JsonHelper.jsonToListObjects(commentsJson, Comment.class);
@@ -29,21 +49,6 @@ public class Task2Tests {
             System.out.println("Email: = " + comment.getEmail());
             System.out.println("Body: = " + comment.getBody());
         }
-    }
-
-    private static ClientAPI getClientAPI() {
-        Map<String,String> props = new HashMap<>();
-        props.put("Timeout", "60000");
-        props.put("Content-Type", "application/json");
-        props.put("Accept", "*/*");
-        props.put("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.4 Safari/537.36");
-
-        ClientAPI clientAPI = new ClientHttpClientJava(props);
-//        ClientAPI clientAPI = new ClientHttpURLConnectionsJava(props);
-//        ClientAPI clientAPI = new ClientJSoup(props);
-
-        System.out.println("clientAPI === " + clientAPI.getClass().getSimpleName());
-        return clientAPI;
     }
 
     private static String getPostsByUserId(int userId) {
@@ -64,10 +69,7 @@ public class Task2Tests {
     private static void saveCommentsToFile(String fileName, String content) {
         Runnable taskSave = new Runnable() {
             public void run() {
-                System.out.println("Starting " + Thread.currentThread().getName());
-                System.out.println("Write to file = " + fileName);
                 File file = new File(fileName);
-
                 try (FileWriter writer = new FileWriter(file))
                 {
                     writer.write(content);
@@ -75,7 +77,6 @@ public class Task2Tests {
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
-                System.out.println("Finished " + Thread.currentThread().getName());
             }
         };
         new Thread(taskSave).start();

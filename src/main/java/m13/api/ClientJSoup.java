@@ -2,7 +2,6 @@ package m13.api;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,9 +23,9 @@ public class ClientJSoup implements ClientAPI {
                 .ignoreContentType(true)
                 .userAgent(props.get("User-Agent"))
                 .timeout(Integer.parseInt(props.get("Timeout")));
-        if (params != null) {
-            conn.data(params);
-        }
+                if (params != null) {
+                    conn.data(params);
+                }
         return conn;
     }
     public Connection getConnection(String reqUrl) {
@@ -44,12 +43,10 @@ public class ClientJSoup implements ClientAPI {
                     .execute();
 
             int respCode = conn.statusCode();
-
             retResp.put("respCode", String.valueOf(respCode));
+
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", conn.parse().text());
-            } else {
-                retResp.put("respBody", "{}");
             }
 
         } catch (IOException e) {
@@ -70,12 +67,10 @@ public class ClientJSoup implements ClientAPI {
                     .execute();
 
             int respCode = conn.statusCode();
-
             retResp.put("respCode", String.valueOf(respCode));
+
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", conn.parse().text());
-            } else {
-                retResp.put("respBody", "{}");
             }
 
         } catch (IOException e) {
@@ -97,12 +92,10 @@ public class ClientJSoup implements ClientAPI {
                     .execute();
 
             int respCode = conn.statusCode();
-
             retResp.put("respCode", String.valueOf(respCode));
+
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", conn.parse().text());
-            } else {
-                retResp.put("respBody", "{}");
             }
 
         } catch (IOException e) {
@@ -123,12 +116,10 @@ public class ClientJSoup implements ClientAPI {
                     .execute();
 
             int respCode = conn.statusCode();
-
             retResp.put("respCode", String.valueOf(respCode));
+
             if (respCode >= 200 && respCode < 300){
                 retResp.put("respBody", conn.parse().text());
-            } else {
-                retResp.put("respBody", "{}");
             }
 
         } catch (IOException e) {

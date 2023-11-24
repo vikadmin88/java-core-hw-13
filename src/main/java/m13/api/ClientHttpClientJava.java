@@ -19,7 +19,7 @@ public class ClientHttpClientJava implements ClientAPI{
     }
 
     private HttpRequest.Builder connect(String reqUrl, Map<String, String> params) throws URISyntaxException {
-        if (params != null && !params.isEmpty()) {
+        if (params != null) {
             reqUrl = reqUrl.contains("?") ? reqUrl + "&" : reqUrl + "?";
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 String key = entry.getKey();
@@ -28,14 +28,12 @@ public class ClientHttpClientJava implements ClientAPI{
             }
         }
 
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
+        return HttpRequest.newBuilder()
                 .uri(new URI(reqUrl))
                 .timeout(Duration.ofMillis(Integer.parseInt(props.get("Timeout"))))
                 .header("Content-Type", props.get("Content-Type"))
                 .header("Accept", props.get("Accept"))
                 .header("User-Agent", props.get("User-Agent"));
-
-        return builder;
     }
     public HttpRequest getConnection(String reqUrl) throws URISyntaxException {
         return HttpRequest.newBuilder()
@@ -56,18 +54,18 @@ public class ClientHttpClientJava implements ClientAPI{
                     .POST(HttpRequest.BodyPublishers.ofString(reqBody))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             respCode = response.statusCode();
             retResp.put("respCode", String.valueOf(respCode));
-            retResp.put("respBody", response.body().replace("\n", ""));
+            if (respCode >= 200 && respCode < 300) {
+                retResp.put("respBody", response.body().replace("\n", ""));
+            }
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
             retResp.put("respErr", e.getMessage());
             System.out.println("Error during GET request: " + e.getMessage());
         }
 
-        if (respCode < 200 || respCode > 299){
-            retResp.put("respBody", "{}");
-        }
         return retResp;
     }
 
@@ -83,18 +81,17 @@ public class ClientHttpClientJava implements ClientAPI{
             builder = connect(reqUrl, params);
             HttpRequest request = builder.GET().build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             respCode = response.statusCode();
             retResp.put("respCode", String.valueOf(respCode));
-            retResp.put("respBody", response.body().replace("\n", ""));
+            if (respCode >= 200 && respCode < 300) {
+                retResp.put("respBody", response.body().replace("\n", ""));
+            }
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
             retResp.put("respErr", e.getMessage());
             System.out.println("Error during GET request: " + e.getMessage());
         }
-
-            if (respCode < 200 || respCode > 299){
-                retResp.put("respBody", "{}");
-            }
 
         return retResp;
     }
@@ -113,17 +110,16 @@ public class ClientHttpClientJava implements ClientAPI{
                     .PUT(HttpRequest.BodyPublishers.ofString(reqBody))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             respCode = response.statusCode();
             retResp.put("respCode", String.valueOf(respCode));
-            retResp.put("respBody", response.body().replace("\n", ""));
+            if (respCode >= 200 && respCode < 300) {
+                retResp.put("respBody", response.body().replace("\n", ""));
+            }
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
             retResp.put("respErr", e.getMessage());
             System.out.println("Error during GET request: " + e.getMessage());
-        }
-
-        if (respCode < 200 || respCode > 299){
-            retResp.put("respBody", "{}");
         }
 
         return retResp;
@@ -141,17 +137,16 @@ public class ClientHttpClientJava implements ClientAPI{
             builder = connect(reqUrl, params);
             HttpRequest request = builder.DELETE().build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             respCode = response.statusCode();
             retResp.put("respCode", String.valueOf(respCode));
-            retResp.put("respBody", response.body().replace("\n", ""));
+            if (respCode >= 200 && respCode < 300) {
+                retResp.put("respBody", response.body().replace("\n", ""));
+            }
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
             retResp.put("respErr", e.getMessage());
             System.out.println("Error during GET request: " + e.getMessage());
-        }
-
-        if (respCode < 200 || respCode > 299){
-            retResp.put("respBody", "{}");
         }
 
         return retResp;
